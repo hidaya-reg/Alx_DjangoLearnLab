@@ -1,4 +1,4 @@
->>> from bookshelf.models import Book
+from bookshelf.models import Book
 >>> book = Book.objects.first()
 >>> print("Title:", book.title)
 Title: 1984
