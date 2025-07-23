@@ -1,20 +1,27 @@
 import os
 import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LibraryProject.settings')  # adjust if your settings file is elsewhere
+# Setup Django environment
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LibraryProject.settings')
 django.setup()
 
-from relationship_app.models import Author, Book, Library, Librarian
+from relationship_app.models import Library, Author, Book
 
-from relationship_app.models import Author, Book, Library
+# Create data
+library, _ = Library.objects.get_or_create(name='Central Library')
 
-library, _ = Library.objects.get_or_create(name="Central Library")
-author, _ = Author.objects.get_or_create(name="George Orwell")
+author, _ = Author.objects.get_or_create(name='George Orwell')
 
-Book.objects.get_or_create(title="1984", author=author, library=library)
-Book.objects.get_or_create(title="Animal Farm", author=author, library=library)
+book1, _ = Book.objects.get_or_create(title='1984', author=author, library=library)
+book2, _ = Book.objects.get_or_create(title='Animal Farm', author=author, library=library)
 
-print("Books by George Orwell:")
-for book in author.book_set.all():
-    print(book.title)
+# Query books by library name
+library_name = 'Central Library'
+library = Library.objects.get(name=library_name)  # ✅ required line
 
+books = library.books.all()  # ✅ required line
+
+print(f"Books by {author.name} in {library.name}:")
+for book in books:
+    if book.author == author:
+        print(f"- {book.title}")
